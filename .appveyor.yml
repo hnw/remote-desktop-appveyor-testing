@@ -1,0 +1,22 @@
+version: '{branch}.{build}'
+
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - ps: |
+    [Net.ServicePointManager]::SecurityProtocol = 'Ssl3, Tls, Tls11, Tls12'
+  - ps: |
+    While ((Test-NetConnection google.com -Port 80 -InformationLevel Quiet) -ne "True") {
+        echo "waiting for network..."
+        Start-Sleep 1
+    }
+
+install:
+- c:\msys64\usr\bin\pacman -Syuu --noconfirm
+- c:\msys64\usr\bin\pacman -Ss winpty
+- c:\msys64\usr\bin\pacman -S winpty --noconfirm
+    
+build_script:
+  - ps: Test-NetConnection google.com -Port 80
+  - where winpty.exe
+
+test:off
