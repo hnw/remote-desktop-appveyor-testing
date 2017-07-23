@@ -19,4 +19,4 @@ build_script:
   - ps: Test-NetConnection google.com -Port 80
   - where winpty.exe
 
-test:off
+test: off
